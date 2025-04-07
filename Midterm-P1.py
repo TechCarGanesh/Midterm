@@ -8,6 +8,7 @@ from datetime import datetime
 from datetime import date
 import tkinter as tk
 from tkinter import messagebox
+import os
 
 # Abstract Base Class for Plastic Waste Data
 class GenPlasticWasteData:
@@ -72,101 +73,108 @@ class FremontGenData(GenPlasticWasteData):
     def __init__(self, population):
         super().__init__("Fremont", population)
 
-    def generate_data(self):
-        super().generate_data()
-
-    def generate_records(self):
-        """Generates 10,000 random records for Fremont."""
-        self.recyclable_quantity = 0
-        self.nonrecyclable_quantity = 0
-        self.sometimesrecyclable_quantity = 0
-
-        for _ in range(10000):
-            plastic_type = random.choice(self.plastic_types)
-            quantity = random.randint(1, 100)
-
-            if plastic_type in self.recyclable:
-                self.recyclable_quantity += quantity
-            elif plastic_type in self.non_recyclable:
-                self.nonrecyclable_quantity += quantity
-            elif plastic_type in self.sometimes_recyclable:
-                self.sometimesrecyclable_quantity += quantity
-
-        self.calculate_total_records()
-
-    def write_csv(self, file_path):
-        """Writes the generated data to the CSV file for Fremont."""
-        with open(file_path, mode='w', newline='') as file:
+    def generate_data(self, filename):
+        """
+        Generates 10,000 records of plastic waste data and writes them to a CSV file.
+        Each record will be in the format: "type, quantity" pairs.
+        """
+        with open(filename, mode='w', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow(["City", "Population", "Recyclable Quantity", "Non-Recyclable Quantity",
-                             "Sometimes Recyclable Quantity", "Date Received", "Date Processed"])
-            writer.writerow([self.city, self.population, self.recyclable_quantity,
-                             self.nonrecyclable_quantity, self.sometimesrecyclable_quantity,
-                             self.date_received, self.date_processed])
+            for _ in range(10000):
+                record = []
+                for plastic_type in self.plastic_types:
+                    quantity = random.randint(50, 500)  # Generate a random quantity for each plastic type
+                    record.append(plastic_type)
+                    record.append(quantity)
+                    if plastic_type in self.recyclable:
+                        self.recyclable_quantity += quantity
+                    elif plastic_type in self.non_recyclable:
+                        self.nonrecyclable_quantity += quantity
+                    elif plastic_type in self.sometimes_recyclable:
+                        self.sometimesrecyclable_quantity += quantity
+                self.calculate_total_records()
+                writer.writerow(record)
 
-    def read_csv(self, file_path):
-        """Reads the CSV file and populates the Fremont data."""
-        with open(file_path, mode='r') as file:
-            reader = csv.DictReader(file)
+    def calculate_total_records(self):
+        """Calculates the total number of records based on the quantities."""
+        self.total_records = (self.recyclable_quantity +
+                              self.nonrecyclable_quantity +
+                              self.sometimesrecyclable_quantity)
+
+
+    def read_csv(self, filename):
+        """
+        Reads the generated CSV file and returns the data in a list of dictionaries
+        where each dictionary contains the plastic type and quantity.
+        """
+        data = []
+        with open(filename, mode='r') as file:
+            reader = csv.reader(file)
             for row in reader:
-                if row['Type'] in self.recyclable:
-                    self.recyclable_quantity += int(row['Quantity'])
-                elif row['Type'] in self.non_recyclable:
-                    self.nonrecyclable_quantity += int(row['Quantity'])
-                elif row['Type'] in self.sometimes_recyclable:
-                    self.sometimesrecyclable_quantity += int(row['Quantity'])
-        self.calculate_total_records()
-
+                record = {}
+                for i in range(0, len(row), 2):  # Pairing the plastic type and quantity
+                    plastic_type = row[i]
+                    quantity = int(row[i + 1])
+                    record[plastic_type] = quantity
+                    if plastic_type in self.recyclable:
+                        self.recyclable_quantity += quantity
+                    elif plastic_type in self.non_recyclable:
+                        self.nonrecyclable_quantity += quantity
+                    elif plastic_type in self.sometimes_recyclable:
+                        self.sometimesrecyclable_quantity += quantity
+                self.calculate_total_records()
+                data.append(record)
+        return data
 
 # Subclass for Hayward
 class HaywardGenData(GenPlasticWasteData):
     def __init__(self, population):
         super().__init__("Hayward", population)
 
-    def generate_data(self):
-        super().generate_data()
-
-    def generate_records(self):
-        """Generates 10,000 random records for Hayward."""
-        self.recyclable_quantity = 0
-        self.nonrecyclable_quantity = 0
-        self.sometimesrecyclable_quantity = 0
-
-        for _ in range(10000):
-            plastic_type = random.choice(self.plastic_types)
-            quantity = random.randint(1, 100)
-
-            if plastic_type in self.recyclable:
-                self.recyclable_quantity += quantity
-            elif plastic_type in self.non_recyclable:
-                self.nonrecyclable_quantity += quantity
-            elif plastic_type in self.sometimes_recyclable:
-                self.sometimesrecyclable_quantity += quantity
-
-        self.calculate_total_records()
-
-    def write_csv(self, file_path):
-        """Writes the generated data to the CSV file for Hayward."""
-        with open(file_path, mode='w', newline='') as file:
+    def generate_data(self, filename):
+        """
+        Generates 10,000 records of plastic waste data and writes them to a CSV file.
+        Each record will be in the format: "type, quantity" pairs.
+        """
+        with open(filename, mode='w', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow(["City", "Population", "Recyclable Quantity", "Non-Recyclable Quantity",
-                             "Sometimes Recyclable Quantity", "Date Received", "Date Processed"])
-            writer.writerow([self.city, self.population, self.recyclable_quantity,
-                             self.nonrecyclable_quantity, self.sometimesrecyclable_quantity,
-                             self.date_received, self.date_processed])
+            for _ in range(10000):
+                record = []
+                for plastic_type in self.plastic_types:
+                    quantity = random.randint(50, 500)  # Generate a random quantity for each plastic type
+                    record.append(plastic_type)
+                    record.append(quantity)
+                    if plastic_type in self.recyclable:
+                        self.recyclable_quantity += quantity
+                    elif plastic_type in self.non_recyclable:
+                        self.nonrecyclable_quantity += quantity
+                    elif plastic_type in self.sometimes_recyclable:
+                        self.sometimesrecyclable_quantity += quantity
+                self.calculate_total_records()
+                writer.writerow(record)
 
-    def read_csv(self, file_path):
-        """Reads the CSV file and populates the Hayward data."""
-        with open(file_path, mode='r') as file:
-            reader = csv.DictReader(file)
+    def read_csv(self, filename):
+        """
+        Reads the generated CSV file and returns the data in a list of dictionaries
+        where each dictionary contains the plastic type and quantity.
+        """
+        data = []
+        with open(filename, mode='r') as file:
+            reader = csv.reader(file)
             for row in reader:
-                if row['Type'] in self.recyclable:
-                    self.recyclable_quantity += int(row['Quantity'])
-                elif row['Type'] in self.non_recyclable:
-                    self.nonrecyclable_quantity += int(row['Quantity'])
-                elif row['Type'] in self.sometimes_recyclable:
-                    self.sometimesrecyclable_quantity += int(row['Quantity'])
-        self.calculate_total_records()
+                record = {}
+                for i in range(0, len(row), 2):  # Pairing the plastic type and quantity
+                    plastic_type = row[i]
+                    quantity = int(row[i + 1])
+                    record[plastic_type] = quantity
+                    if plastic_type in self.recyclable:
+                        self.recyclable_quantity += quantity
+                    elif plastic_type in self.non_recyclable:
+                        self.nonrecyclable_quantity += quantity
+                    elif plastic_type in self.sometimes_recyclable:
+                        self.sometimesrecyclable_quantity += quantity
+                data.append(record)
+        return data
 
 
 # Repeat similar classes for other cities (Oakland, Pleasanton, Dublin)
@@ -174,150 +182,149 @@ class OaklandGenData(GenPlasticWasteData):
     def __init__(self, population):
         super().__init__("Oakland", population)
 
-    def generate_data(self):
-        super().generate_data()
-
-    def generate_records(self):
-        """Generates 10,000 random records for Hayward."""
-        self.recyclable_quantity = 0
-        self.nonrecyclable_quantity = 0
-        self.sometimesrecyclable_quantity = 0
-
-        for _ in range(10000):
-            plastic_type = random.choice(self.plastic_types)
-            quantity = random.randint(1, 100)
-
-            if plastic_type in self.recyclable:
-                self.recyclable_quantity += quantity
-            elif plastic_type in self.non_recyclable:
-                self.nonrecyclable_quantity += quantity
-            elif plastic_type in self.sometimes_recyclable:
-                self.sometimesrecyclable_quantity += quantity
-
-        self.calculate_total_records()
-
-    def write_csv(self, file_path):
-        """Writes the generated data to the CSV file for Hayward."""
-        with open(file_path, mode='w', newline='') as file:
+    def generate_data(self, filename):
+        """
+        Generates 10,000 records of plastic waste data and writes them to a CSV file.
+        Each record will be in the format: "type, quantity" pairs.
+        """
+        with open(filename, mode='w', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow(["City", "Population", "Recyclable Quantity", "Non-Recyclable Quantity",
-                             "Sometimes Recyclable Quantity", "Date Received", "Date Processed"])
-            writer.writerow([self.city, self.population, self.recyclable_quantity,
-                             self.nonrecyclable_quantity, self.sometimesrecyclable_quantity,
-                             self.date_received, self.date_processed])
+            for _ in range(10000):
+                record = []
+                for plastic_type in self.plastic_types:
+                    quantity = random.randint(50, 500)  # Generate a random quantity for each plastic type
+                    record.append(plastic_type)
+                    record.append(quantity)
+                    if plastic_type in self.recyclable:
+                        self.recyclable_quantity += quantity
+                    elif plastic_type in self.non_recyclable:
+                        self.nonrecyclable_quantity += quantity
+                    elif plastic_type in self.sometimes_recyclable:
+                        self.sometimesrecyclable_quantity += quantity
+                self.calculate_total_records()
+                writer.writerow(record)
 
-    def read_csv(self, file_path):
-        """Reads the CSV file and populates the Hayward data."""
-        with open(file_path, mode='r') as file:
-            reader = csv.DictReader(file)
+    def read_csv(self, filename):
+        """
+        Reads the generated CSV file and returns the data in a list of dictionaries
+        where each dictionary contains the plastic type and quantity.
+        """
+        data = []
+        with open(filename, mode='r') as file:
+            reader = csv.reader(file)
             for row in reader:
-                if row['Type'] in self.recyclable:
-                    self.recyclable_quantity += int(row['Quantity'])
-                elif row['Type'] in self.non_recyclable:
-                    self.nonrecyclable_quantity += int(row['Quantity'])
-                elif row['Type'] in self.sometimes_recyclable:
-                    self.sometimesrecyclable_quantity += int(row['Quantity'])
-        self.calculate_total_records()
-
+                record = {}
+                for i in range(0, len(row), 2):  # Pairing the plastic type and quantity
+                    plastic_type = row[i]
+                    quantity = int(row[i + 1])
+                    record[plastic_type] = quantity
+                    if plastic_type in self.recyclable:
+                        self.recyclable_quantity += quantity
+                    elif plastic_type in self.non_recyclable:
+                        self.nonrecyclable_quantity += quantity
+                    elif plastic_type in self.sometimes_recyclable:
+                        self.sometimesrecyclable_quantity += quantity
+                data.append(record)
+        return data
 
 class PleasantonGenData(GenPlasticWasteData):
     def __init__(self, population):
         super().__init__("Pleasanton", population)
 
-    def generate_data(self):
-        super().generate_data()
-
-    def generate_records(self):
-        """Generates 10,000 random records for Hayward."""
-        self.recyclable_quantity = 0
-        self.nonrecyclable_quantity = 0
-        self.sometimesrecyclable_quantity = 0
-
-        for _ in range(10000):
-            plastic_type = random.choice(self.plastic_types)
-            quantity = random.randint(1, 100)
-
-            if plastic_type in self.recyclable:
-                self.recyclable_quantity += quantity
-            elif plastic_type in self.non_recyclable:
-                self.nonrecyclable_quantity += quantity
-            elif plastic_type in self.sometimes_recyclable:
-                self.sometimesrecyclable_quantity += quantity
-
-        self.calculate_total_records()
-
-    def write_csv(self, file_path):
-        """Writes the generated data to the CSV file for Hayward."""
-        with open(file_path, mode='w', newline='') as file:
+    def generate_data(self, filename):
+        """
+        Generates 10,000 records of plastic waste data and writes them to a CSV file.
+        Each record will be in the format: "type, quantity" pairs.
+        """
+        with open(filename, mode='w', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow(["City", "Population", "Recyclable Quantity", "Non-Recyclable Quantity",
-                             "Sometimes Recyclable Quantity", "Date Received", "Date Processed"])
-            writer.writerow([self.city, self.population, self.recyclable_quantity,
-                             self.nonrecyclable_quantity, self.sometimesrecyclable_quantity,
-                             self.date_received, self.date_processed])
+            for _ in range(10000):
+                record = []
+                for plastic_type in self.plastic_types:
+                    quantity = random.randint(50, 500)  # Generate a random quantity for each plastic type
+                    record.append(plastic_type)
+                    record.append(quantity)
+                    if plastic_type in self.recyclable:
+                        self.recyclable_quantity += quantity
+                    elif plastic_type in self.non_recyclable:
+                        self.nonrecyclable_quantity += quantity
+                    elif plastic_type in self.sometimes_recyclable:
+                        self.sometimesrecyclable_quantity += quantity
+                self.calculate_total_records()
+                writer.writerow(record)
 
-    def read_csv(self, file_path):
-        """Reads the CSV file and populates the Hayward data."""
-        with open(file_path, mode='r') as file:
-            reader = csv.DictReader(file)
+    def read_csv(self, filename):
+        """
+        Reads the generated CSV file and returns the data in a list of dictionaries
+        where each dictionary contains the plastic type and quantity.
+        """
+        data = []
+        with open(filename, mode='r') as file:
+            reader = csv.reader(file)
             for row in reader:
-                if row['Type'] in self.recyclable:
-                    self.recyclable_quantity += int(row['Quantity'])
-                elif row['Type'] in self.non_recyclable:
-                    self.nonrecyclable_quantity += int(row['Quantity'])
-                elif row['Type'] in self.sometimes_recyclable:
-                    self.sometimesrecyclable_quantity += int(row['Quantity'])
-        self.calculate_total_records()
+                record = {}
+                for i in range(0, len(row), 2):  # Pairing the plastic type and quantity
+                    plastic_type = row[i]
+                    quantity = int(row[i + 1])
+                    record[plastic_type] = quantity
+                    if plastic_type in self.recyclable:
+                        self.recyclable_quantity += quantity
+                    elif plastic_type in self.non_recyclable:
+                        self.nonrecyclable_quantity += quantity
+                    elif plastic_type in self.sometimes_recyclable:
+                        self.sometimesrecyclable_quantity += quantity
+                data.append(record)
+        return data
 
 
 class DublinGenData(GenPlasticWasteData):
     def __init__(self, population):
         super().__init__("Dublin", population)
 
-    def generate_data(self):
-        super().generate_data()
-
-    def generate_records(self):
-        """Generates 10,000 random records for Hayward."""
-        self.recyclable_quantity = 0
-        self.nonrecyclable_quantity = 0
-        self.sometimesrecyclable_quantity = 0
-
-        for _ in range(10000):
-            plastic_type = random.choice(self.plastic_types)
-            quantity = random.randint(1, 100)
-
-            if plastic_type in self.recyclable:
-                self.recyclable_quantity += quantity
-            elif plastic_type in self.non_recyclable:
-                self.nonrecyclable_quantity += quantity
-            elif plastic_type in self.sometimes_recyclable:
-                self.sometimesrecyclable_quantity += quantity
-
-        self.calculate_total_records()
-
-    def write_csv(self, file_path):
-        """Writes the generated data to the CSV file for Hayward."""
-        with open(file_path, mode='w', newline='') as file:
+    def generate_data(self, filename):
+        """
+        Generates 10,000 records of plastic waste data and writes them to a CSV file.
+        Each record will be in the format: "type, quantity" pairs.
+        """
+        with open(filename, mode='w', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow(["City", "Population", "Recyclable Quantity", "Non-Recyclable Quantity",
-                             "Sometimes Recyclable Quantity", "Date Received", "Date Processed"])
-            writer.writerow([self.city, self.population, self.recyclable_quantity,
-                             self.nonrecyclable_quantity, self.sometimesrecyclable_quantity,
-                             self.date_received, self.date_processed])
+            for _ in range(10000):
+                record = []
+                for plastic_type in self.plastic_types:
+                    quantity = random.randint(50, 500)  # Generate a random quantity for each plastic type
+                    record.append(plastic_type)
+                    record.append(quantity)
+                    if plastic_type in self.recyclable:
+                        self.recyclable_quantity += quantity
+                    elif plastic_type in self.non_recyclable:
+                        self.nonrecyclable_quantity += quantity
+                    elif plastic_type in self.sometimes_recyclable:
+                        self.sometimesrecyclable_quantity += quantity
+                self.calculate_total_records()
+                writer.writerow(record)
 
-    def read_csv(self, file_path):
-        """Reads the CSV file and populates the Hayward data."""
-        with open(file_path, mode='r') as file:
-            reader = csv.DictReader(file)
+    def read_csv(self, filename):
+        """
+        Reads the generated CSV file and returns the data in a list of dictionaries
+        where each dictionary contains the plastic type and quantity.
+        """
+        data = []
+        with open(filename, mode='r') as file:
+            reader = csv.reader(file)
             for row in reader:
-                if row['Type'] in self.recyclable:
-                    self.recyclable_quantity += int(row['Quantity'])
-                elif row['Type'] in self.non_recyclable:
-                    self.nonrecyclable_quantity += int(row['Quantity'])
-                elif row['Type'] in self.sometimes_recyclable:
-                    self.sometimesrecyclable_quantity += int(row['Quantity'])
-        self.calculate_total_records()
+                record = {}
+                for i in range(0, len(row), 2):  # Pairing the plastic type and quantity
+                    plastic_type = row[i]
+                    quantity = int(row[i + 1])
+                    record[plastic_type] = quantity
+                    if plastic_type in self.recyclable:
+                        self.recyclable_quantity += quantity
+                    elif plastic_type in self.non_recyclable:
+                        self.nonrecyclable_quantity += quantity
+                    elif plastic_type in self.sometimes_recyclable:
+                        self.sometimesrecyclable_quantity += quantity
+                data.append(record)
+        return data
 
 # PlasticWasteRecyclingDB to manage plastic waste data using hash table
 class PlasticWasteRecyclingDB:
@@ -388,7 +395,7 @@ class PlasticWasteRecyclingDB:
         else:
             print(f"No data found for {city}.")
 
-    def compare_efficiency(self, city_data):
+    def compare_efficiency(self, city_data, selected_months):
         """
         Compares the recycling efficiency of different cities.
         Efficiency is calculated as the ratio of recyclable quantity to total quantity (recyclable + non-recyclable + sometimes recyclable).
@@ -406,10 +413,6 @@ class PlasticWasteRecyclingDB:
 
         # Sort cities based on efficiency in descending order
         sorted_efficiency = sorted(efficiency_data.items(), key=lambda item: item[1], reverse=True)
-
-        print("City Recycling Efficiency Comparison:")
-        for city, efficiency in sorted_efficiency:
-            print(f"{city}: {efficiency:.2f}")
 
         # Plot bar chart for recycling efficiency
         self.plot_efficiency_bar_chart(efficiency_data)
@@ -695,9 +698,20 @@ def create_ui():
 
     # List of available cities
     cities = ["Fremont", "Hayward", "Oakland", "Pleasanton", "Dublin"]
+    months = ["January", "February", "March", "April", "May", "June", "July", "August", "September",
+              "October", "November", "December"]
 
     # Initialize variables for user selections
     selected_cities = []
+    selected_months = []
+
+    # Add a frame to group the checkboxes
+    city_frame = tk.Frame(root)
+    city_frame.pack(pady=20)  # Add some vertical space between the frame and other widgets
+
+    # Add a frame to group the month checkboxes
+    month_frame = tk.Frame(root)
+    month_frame.pack(pady=20)
 
     # Add checkboxes for city selection
     def on_city_select():
@@ -706,6 +720,13 @@ def create_ui():
         for i, var in enumerate(city_vars):
             if var.get() == 1:
                 selected_cities.append(cities[i])
+
+    def on_months_select():
+        print("In on_month_select function")
+        selected_months.clear()
+        for i, var in enumerate(month_vars):
+            if var.get() == 1:
+                selected_months.append(months[i])
 
     # Function to generate and compare efficiency when the button is clicked
     def compare_efficiency():
@@ -727,24 +748,42 @@ def create_ui():
                 data = pleasanton_data
             elif city == "Dublin":
                 data = dublin_data
-
+            for month in months:
+                filename = f"{city}{month}.csv"
+                data_list = data.read_csv(filename)  # Read the generated data
+                # Assuming we want to sum the quantities for the city data
+                total_recyclable = sum(record.get("PET", 0) + record.get("HDPE", 0) for record in data_list)
+                total_non_recyclable = sum(record.get("PVC", 0) for record in data_list)
+                total_sometimes_recyclable = sum(
+                    record.get("LDPE", 0) + record.get("PP", 0) + record.get("PS", 0) + record.get("Other", 0) for record in
+                    data_list)
+            data.recyclable_quantity = total_recyclable
+            data.nonrecyclable_quantity = total_non_recyclable
+            data.sometimesrecyclable_quantity = total_sometimes_recyclable
             city_data.append(data)
-
         # Initialize the database and insert the data
         db = PlasticWasteRecyclingDB(10)
         for city_data_item in city_data:
             db.insert(city_data_item.city, city_data_item)
 
         # Compare efficiency
-        db.compare_efficiency(city_data)
+        db.compare_efficiency(city_data, selected_months)
 
-    # Create checkboxes for city selection
+    # Create checkboxes for city selection inside the frame
     city_vars = []
     for city in cities:
         var = tk.IntVar()
         city_vars.append(var)
-        cb = tk.Checkbutton(root, text=city, variable=var, onvalue=1, offvalue=0, command=on_city_select)
-        cb.pack()
+        cb = tk.Checkbutton(city_frame, text=city, variable=var, onvalue=1, offvalue=0, command=on_city_select)
+        cb.pack(side='left', padx=10)  # Place checkboxes horizontally with padding between them
+
+    # Create checkboxes for city selection
+    month_vars = []
+    for month in months:
+        var = tk.IntVar()
+        month_vars.append(var)
+        cb = tk.Checkbutton(month_frame, text=month, variable=var, onvalue=1, offvalue=0, command=on_months_select)
+        cb.pack(side='left', padx=10)
 
     # Compare button
     compare_button = tk.Button(root, text="Compare Efficiency", command=compare_efficiency)
@@ -753,65 +792,121 @@ def create_ui():
     root.mainloop()
 
 
-# Example Usage
 # Creating instances for each city
+# Global data
 fremont_data = FremontGenData(population=240000)
 hayward_data = HaywardGenData(population=160000)
 oakland_data = OaklandGenData(population=420000)
 pleasanton_data = PleasantonGenData(population=78000)
 dublin_data = DublinGenData(population=60000)
 
-# Generating 10,000 records for each city
-fremont_data.generate_records()
-hayward_data.generate_records()
-oakland_data.generate_records()
-pleasanton_data.generate_records()
-dublin_data.generate_records()
+def main():
+    months = ["January", "February", "March", "April", "May", "June", "July", "August", "September",
+              "October", "November", "December"]
+    cities = ["Fremont", "Hayward", "Oakland", "Pleasanton", "Dublin"]
 
-# Writing the generated data to CSV files
-fremont_data.write_csv("fremont_plastic_waste_data.csv")
-hayward_data.write_csv("hayward_plastic_waste_data.csv")
-oakland_data.write_csv("oakland_plastic_waste_data.csv")
-pleasanton_data.write_csv("pleasanton_plastic_waste_data.csv")
-dublin_data.write_csv("dublin_plastic_waste_data.csv")
+    for month in months:
+        for city in cities:
+            file_path = city + month + ".csv"
+            # Generating 10,000 records for each city
+            if city == "Fremont":
+                if not os.path.exists(file_path):
+                    fremont_data.generate_data(file_path)
+                else:
+                    fremont_data.read_csv(file_path)
+            if city == "Hayward":
+                if not os.path.exists(file_path):
+                    hayward_data.generate_data(file_path)
+                else:
+                    hayward_data.read_csv(file_path)
+            if city == "Oakland":
+                if not os.path.exists(file_path):
+                    oakland_data.generate_data(file_path)
+                else:
+                    oakland_data.read_csv(file_path)
+            if city == "Pleasanton":
+                if not os.path.exists(file_path):
+                    pleasanton_data.generate_data(file_path)
+                else:
+                    pleasanton_data.read_csv(file_path)
+            if city == "Dublin":
+                if not os.path.exists(file_path):
+                    dublin_data.generate_data(file_path)
+                else:
+                    dublin_data.read_csv(file_path)
 
-# Create the PlasticWasteRecyclingDB and insert data for Fremont
-db = PlasticWasteRecyclingDB(capacity=10)
-db.insert("Fremont", fremont_data)
 
-# Read the data back for Fremont
-db.read_city_recycle_data("Fremont")
-db.read_city_recycle_data("Hayward")
-db.read_city_recycle_data("Oakland")
-db.read_city_recycle_data("Pleasanton")
-db.read_city_recycle_data("Dublin")
+    # Create the PlasticWasteRecyclingDB and insert data for Fremont
+    db = PlasticWasteRecyclingDB(capacity=10)
+    db.insert("Fremont", fremont_data)
 
-# db.compare_efficiency([fremont_data, hayward_data, oakland_data, pleasanton_data, dublin_data])
+    # Read the data back for 5 cities
+    db.read_city_recycle_data("Fremont")
+    db.read_city_recycle_data("Hayward")
+    db.read_city_recycle_data("Oakland")
+    db.read_city_recycle_data("Pleasanton")
+    db.read_city_recycle_data("Dublin")
 
-# Delete the Fremont entry
-db.delete("Fremont")
+    # db.compare_efficiency([fremont_data, hayward_data, oakland_data, pleasanton_data, dublin_data])
 
-# Try searching after deletion
-db.read_city_recycle_data("Fremont")
+    # Delete the Fremont entry
+    db.delete("Fremont")
 
-# Classify plastic types
-print(db.classify_recyclable("PET"))  # Should return True
-print(db.classify_nonrecyclable("PVC"))  # Should return True
-print(db.classify_sometimesrecyclable("LDPE"))  # Should return True
+    # Try searching after deletion
+    db.read_city_recycle_data("Fremont")
 
-# Example usage
-visualizer = VisualizePlasticWaste()
+    # Classify plastic types
+    print(db.classify_recyclable("PET"))  # Should return True
+    print(db.classify_nonrecyclable("PVC"))  # Should return True
+    print(db.classify_sometimesrecyclable("LDPE"))  # Should return True
 
-# Add some sample data
-visualizer.add_data("PET", "Fremont", 500, 200, 100, datetime(2025, 4, 1), datetime(2025, 4, 3))
-visualizer.add_data("HDPE", "Fremont", 600, 150, 200, datetime(2025, 4, 2), datetime(2025, 4, 4))
-visualizer.add_data("PVC", "Hayward", 300, 400, 150, datetime(2025, 4, 3), datetime(2025, 4, 5))
+    # Example usage
+    visualizer = VisualizePlasticWaste()
 
-# Display various visualizations
-visualizer.display_bar_graph()
-visualizer.display_stacked_bar_graph()
-visualizer.display_pie_chart()
-visualizer.display_line_graph()
-visualizer.display_heat_map()
+    # Add some sample data
+    visualizer.add_data("PET", "Fremont", fremont_data.recyclable_quantity,
+                        fremont_data.nonrecyclable_quantity, fremont_data.sometimesrecyclable_quantity,
+                        datetime(2025, 4, 1), datetime(2025, 4, 3))
+    visualizer.add_data("PET", "Hayward", hayward_data.recyclable_quantity,
+                        hayward_data.nonrecyclable_quantity, hayward_data.sometimesrecyclable_quantity,
+                        datetime(2025, 4, 1), datetime(2025, 4, 3))
+    visualizer.add_data("PET", "Oakland", oakland_data.recyclable_quantity,
+                        oakland_data.nonrecyclable_quantity, oakland_data.sometimesrecyclable_quantity,
+                        datetime(2025, 4, 1), datetime(2025, 4, 3))
+    visualizer.add_data("PET", "Pleasanton", pleasanton_data.recyclable_quantity,
+                        pleasanton_data.nonrecyclable_quantity, pleasanton_data.sometimesrecyclable_quantity,
+                        datetime(2025, 4, 1), datetime(2025, 4, 3))
+    visualizer.add_data("PET", "Dublin", dublin_data.recyclable_quantity,
+                        dublin_data.nonrecyclable_quantity, dublin_data.sometimesrecyclable_quantity,
+                        datetime(2025, 4, 1), datetime(2025, 4, 3))
+    # visualizer.add_data("HDPE", "Fremont", fremont_data.recyclable_quantity,
+    #                     fremont_data.nonrecyclable_quantity, fremont_data.sometimesrecyclable_quantity,
+    #                     datetime(2025, 4, 2), datetime(2025, 4, 4))
+    # visualizer.add_data("PVC", "Fremont", fremont_data.recyclable_quantity,
+    #                     fremont_data.nonrecyclable_quantity, fremont_data.sometimesrecyclable_quantity,
+    #                     datetime(2025, 4, 3), datetime(2025, 4, 5))
+    # visualizer.add_data("LDPE", "Fremont", fremont_data.recyclable_quantity,
+    #                     fremont_data.nonrecyclable_quantity, fremont_data.sometimesrecyclable_quantity,
+    #                     datetime(2025, 4, 3), datetime(2025, 4, 5))
+    # visualizer.add_data("PP", "Fremont", fremont_data.recyclable_quantity,
+    #                     fremont_data.nonrecyclable_quantity, fremont_data.sometimesrecyclable_quantity,
+    #                     datetime(2025, 4, 3), datetime(2025, 4, 5))
+    # visualizer.add_data("PS", "Fremont", fremont_data.recyclable_quantity,
+    #                     fremont_data.nonrecyclable_quantity, fremont_data.sometimesrecyclable_quantity,
+    #                     datetime(2025, 4, 3), datetime(2025, 4, 5))
+    # visualizer.add_data("Other", "Fremont", fremont_data.recyclable_quantity,
+    #                     fremont_data.nonrecyclable_quantity, fremont_data.sometimesrecyclable_quantity,
+    #                     datetime(2025, 4, 3), datetime(2025, 4, 5))
 
-create_ui()
+    # Display various visualizations
+    visualizer.display_bar_graph()
+    visualizer.display_stacked_bar_graph()
+    visualizer.display_pie_chart()
+    visualizer.display_line_graph()
+    visualizer.display_heat_map()
+
+    create_ui()
+
+
+if __name__ == "__main__":
+    main()
