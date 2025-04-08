@@ -30,23 +30,23 @@ class GenPlasticWasteData:
         self.date_processed = None
 
     def generate_records(self):
-        """This method needs to be implemented by the subclass."""
+        # Abstract method.
         raise NotImplementedError("This method must be implemented in a subclass.")
 
     def write_csv(self, file_path):
-        """This method needs to be implemented by the subclass."""
+        # Abstract method.
         raise NotImplementedError("This method must be implemented in a subclass.")
 
     def read_csv(self, file_path):
-        """This method needs to be implemented by the subclass."""
+        # Abstract method.
         raise NotImplementedError("This method must be implemented in a subclass.")
 
     def set_processed_date(self):
-        """Sets the date when the data was processed."""
+        # Sets the date when the data was processed.
         self.date_processed = date.today()
 
     def calculate_total_records(self):
-        """Calculates the total number of records based on the quantities."""
+        # Calculates the total number of records based on the quantities.
         self.total_records = (self.recyclable_quantity +
                               self.nonrecyclable_quantity +
                               self.sometimesrecyclable_quantity)
@@ -71,13 +71,12 @@ class GenPlasticWasteData:
 # Subclass for Fremont
 class FremontGenData(GenPlasticWasteData):
     def __init__(self, population):
+        self.monthly_data = [] * 12
         super().__init__("Fremont", population)
 
     def generate_data(self, filename):
-        """
-        Generates 10,000 records of plastic waste data and writes them to a CSV file.
-        Each record will be in the format: "type, quantity" pairs.
-        """
+        # Generates 10,000 records of plastic waste data and writes them to a CSV file.
+        # Each record will be in the format: "type, quantity" pairs.
         with open(filename, mode='w', newline='') as file:
             writer = csv.writer(file)
             for _ in range(10000):
@@ -94,19 +93,20 @@ class FremontGenData(GenPlasticWasteData):
                         self.sometimesrecyclable_quantity += quantity
                 self.calculate_total_records()
                 writer.writerow(record)
+            self.monthly_data.append(
+                [self.recyclable_quantity, self.nonrecyclable_quantity, self.sometimesrecyclable_quantity,
+                 self.date_received, self.date_processed])
 
     def calculate_total_records(self):
-        """Calculates the total number of records based on the quantities."""
+        # Calculates the total number of records based on the quantities.
         self.total_records = (self.recyclable_quantity +
                               self.nonrecyclable_quantity +
                               self.sometimesrecyclable_quantity)
 
 
     def read_csv(self, filename):
-        """
-        Reads the generated CSV file and returns the data in a list of dictionaries
-        where each dictionary contains the plastic type and quantity.
-        """
+        # Reads the generated CSV file and returns the data in a list of dictionaries
+        # where each dictionary contains the plastic type and quantity.
         data = []
         with open(filename, mode='r') as file:
             reader = csv.reader(file)
@@ -124,18 +124,25 @@ class FremontGenData(GenPlasticWasteData):
                         self.sometimesrecyclable_quantity += quantity
                 self.calculate_total_records()
                 data.append(record)
+            self.monthly_data.append(
+                [self.recyclable_quantity, self.nonrecyclable_quantity, self.sometimesrecyclable_quantity,
+                 self.date_received, self.date_processed])
         return data
+
+
+    def get_monthly_data(self, month):
+        return self.monthly_data[month]
+
 
 # Subclass for Hayward
 class HaywardGenData(GenPlasticWasteData):
     def __init__(self, population):
+        self.monthly_data = [] * 12
         super().__init__("Hayward", population)
 
     def generate_data(self, filename):
-        """
-        Generates 10,000 records of plastic waste data and writes them to a CSV file.
-        Each record will be in the format: "type, quantity" pairs.
-        """
+        # Generates 10,000 records of plastic waste data and writes them to a CSV file.
+        # Each record will be in the format: "type, quantity" pairs.
         with open(filename, mode='w', newline='') as file:
             writer = csv.writer(file)
             for _ in range(10000):
@@ -152,12 +159,13 @@ class HaywardGenData(GenPlasticWasteData):
                         self.sometimesrecyclable_quantity += quantity
                 self.calculate_total_records()
                 writer.writerow(record)
+            self.monthly_data.append(
+                [self.recyclable_quantity, self.nonrecyclable_quantity, self.sometimesrecyclable_quantity,
+                 self.date_received, self.date_processed])
 
     def read_csv(self, filename):
-        """
-        Reads the generated CSV file and returns the data in a list of dictionaries
-        where each dictionary contains the plastic type and quantity.
-        """
+        # Reads the generated CSV file and returns the data in a list of dictionaries
+        # where each dictionary contains the plastic type and quantity.
         data = []
         with open(filename, mode='r') as file:
             reader = csv.reader(file)
@@ -174,19 +182,23 @@ class HaywardGenData(GenPlasticWasteData):
                     elif plastic_type in self.sometimes_recyclable:
                         self.sometimesrecyclable_quantity += quantity
                 data.append(record)
+            self.monthly_data.append(
+                [self.recyclable_quantity, self.nonrecyclable_quantity, self.sometimesrecyclable_quantity,
+                 self.date_received, self.date_processed])
         return data
 
+    def get_monthly_data(self, month):
+        return self.monthly_data[month]
 
 # Repeat similar classes for other cities (Oakland, Pleasanton, Dublin)
 class OaklandGenData(GenPlasticWasteData):
     def __init__(self, population):
+        self.monthly_data = [] * 12
         super().__init__("Oakland", population)
 
     def generate_data(self, filename):
-        """
-        Generates 10,000 records of plastic waste data and writes them to a CSV file.
-        Each record will be in the format: "type, quantity" pairs.
-        """
+        # Generates 10,000 records of plastic waste data and writes them to a CSV file.
+        # Each record will be in the format: "type, quantity" pairs.
         with open(filename, mode='w', newline='') as file:
             writer = csv.writer(file)
             for _ in range(10000):
@@ -203,12 +215,13 @@ class OaklandGenData(GenPlasticWasteData):
                         self.sometimesrecyclable_quantity += quantity
                 self.calculate_total_records()
                 writer.writerow(record)
+            self.monthly_data.append(
+                [self.recyclable_quantity, self.nonrecyclable_quantity, self.sometimesrecyclable_quantity,
+                 self.date_received, self.date_processed])
 
     def read_csv(self, filename):
-        """
-        Reads the generated CSV file and returns the data in a list of dictionaries
-        where each dictionary contains the plastic type and quantity.
-        """
+        # Reads the generated CSV file and returns the data in a list of dictionaries
+        # where each dictionary contains the plastic type and quantity.
         data = []
         with open(filename, mode='r') as file:
             reader = csv.reader(file)
@@ -225,17 +238,23 @@ class OaklandGenData(GenPlasticWasteData):
                     elif plastic_type in self.sometimes_recyclable:
                         self.sometimesrecyclable_quantity += quantity
                 data.append(record)
+            self.monthly_data.append(
+                [self.recyclable_quantity, self.nonrecyclable_quantity, self.sometimesrecyclable_quantity,
+                 self.date_received, self.date_processed])
         return data
+
+
+    def get_monthly_data(self, month):
+        return self.monthly_data[month]
 
 class PleasantonGenData(GenPlasticWasteData):
     def __init__(self, population):
+        self.monthly_data = [] * 12
         super().__init__("Pleasanton", population)
 
     def generate_data(self, filename):
-        """
-        Generates 10,000 records of plastic waste data and writes them to a CSV file.
-        Each record will be in the format: "type, quantity" pairs.
-        """
+        # Generates 10,000 records of plastic waste data and writes them to a CSV file.
+        # Each record will be in the format: "type, quantity" pairs.
         with open(filename, mode='w', newline='') as file:
             writer = csv.writer(file)
             for _ in range(10000):
@@ -252,12 +271,13 @@ class PleasantonGenData(GenPlasticWasteData):
                         self.sometimesrecyclable_quantity += quantity
                 self.calculate_total_records()
                 writer.writerow(record)
+            self.monthly_data.append(
+                [self.recyclable_quantity, self.nonrecyclable_quantity, self.sometimesrecyclable_quantity,
+                 self.date_received, self.date_processed])
 
     def read_csv(self, filename):
-        """
-        Reads the generated CSV file and returns the data in a list of dictionaries
-        where each dictionary contains the plastic type and quantity.
-        """
+        # Reads the generated CSV file and returns the data in a list of dictionaries
+        # where each dictionary contains the plastic type and quantity.
         data = []
         with open(filename, mode='r') as file:
             reader = csv.reader(file)
@@ -274,18 +294,23 @@ class PleasantonGenData(GenPlasticWasteData):
                     elif plastic_type in self.sometimes_recyclable:
                         self.sometimesrecyclable_quantity += quantity
                 data.append(record)
+            self.monthly_data.append(
+                [self.recyclable_quantity, self.nonrecyclable_quantity, self.sometimesrecyclable_quantity,
+                 self.date_received, self.date_processed])
         return data
+
+    def get_monthly_data(self, month):
+        return self.monthly_data[month]
 
 
 class DublinGenData(GenPlasticWasteData):
     def __init__(self, population):
+        self.monthly_data = [] * 12
         super().__init__("Dublin", population)
 
     def generate_data(self, filename):
-        """
-        Generates 10,000 records of plastic waste data and writes them to a CSV file.
-        Each record will be in the format: "type, quantity" pairs.
-        """
+        # Generates 10,000 records of plastic waste data and writes them to a CSV file.
+        # Each record will be in the format: "type, quantity" pairs.
         with open(filename, mode='w', newline='') as file:
             writer = csv.writer(file)
             for _ in range(10000):
@@ -302,12 +327,13 @@ class DublinGenData(GenPlasticWasteData):
                         self.sometimesrecyclable_quantity += quantity
                 self.calculate_total_records()
                 writer.writerow(record)
+            self.monthly_data.append(
+                [self.recyclable_quantity, self.nonrecyclable_quantity, self.sometimesrecyclable_quantity,
+                 self.date_received, self.date_processed])
 
     def read_csv(self, filename):
-        """
-        Reads the generated CSV file and returns the data in a list of dictionaries
-        where each dictionary contains the plastic type and quantity.
-        """
+        # Reads the generated CSV file and returns the data in a list of dictionaries
+        # where each dictionary contains the plastic type and quantity.
         data = []
         with open(filename, mode='r') as file:
             reader = csv.reader(file)
@@ -324,97 +350,144 @@ class DublinGenData(GenPlasticWasteData):
                     elif plastic_type in self.sometimes_recyclable:
                         self.sometimesrecyclable_quantity += quantity
                 data.append(record)
+            self.monthly_data.append(
+                [self.recyclable_quantity, self.nonrecyclable_quantity, self.sometimesrecyclable_quantity,
+                 self.date_received, self.date_processed])
         return data
+
+
+    def get_monthly_data(self, month):
+        return self.monthly_data[month]
+
 
 # PlasticWasteRecyclingDB to manage plastic waste data using hash table
 class PlasticWasteRecyclingDB:
-    DELETED = object()  # Special marker for deleted entries
-
-    def __init__(self, capacity=100):
+    def __init__(self, capacity=101):
         self.capacity = capacity
         self.type = ["PET", "HDPE", "PVC", "LDPE", "PP", "PS", "Other"]
         self.hash_table = [None] * self.capacity
         self.cities = ["Fremont", "Hayward", "Oakland", "Pleasanton", "Dublin"]
+        self.deleted_marker = "DELETED"
+        self.num_collisions = 0
+        self.curr_size = 0
+        self.load_average = 0
 
     def hash_function(self, city):
-        """A simple hash function to map city to an index."""
+        # A simple hash function to map city to an index.
         return sum(ord(c) for c in city) % self.capacity
 
-    def insert(self, city, value):
-        """Insert the city and its data into the hash table."""
-        index = self.hash_function(city)
-        if self.hash_table[index] is not None and self.hash_table[index] is not self.DELETED:
-            raise ValueError(f"City {city} already exists in the database.")
-        self.hash_table[index] = value
 
-    def delete(self, city):
-        """Delete the data of a city from the hash table, marking it as 'deleted'."""
-        index = self.hash_function(city)
-        if self.hash_table[index] is not None and self.hash_table[index] is not self.DELETED:
-            self.hash_table[index] = self.DELETED
-        else:
-            print(f"City {city} not found or already deleted.")
+    def insert_hash(self, key, value):
+        index = self.hash_function(key)
+        original_index = index
 
-    def search(self, city):
-        """Search for a city's data."""
-        index = self.hash_function(city)
-        data = self.hash_table[index]
-        if data is self.DELETED:
-            print(f"City {city} has been deleted.")
+        while self.hash_table[index] is not None:
+            if self.hash_table[index][0] == key:
+                # Update existing value
+                self.hash_table[index] = (key, value)
+                return
+            index = (index + 1) % self.capacity
+            self.num_collisions += 1
+            if index == original_index:
+                raise Exception("Hash table is full")
+            elif self.hash_table[index] == None or self.hash_table[index] == self.deleted_marker:
+                self.hash_table[index] = (key, value)
+                self.curr_size += 1
+                self.load_average = (self.curr_size/self.capacity)
+                return
+
+        # No collisions Insert new key-value pair
+        self.hash_table[index] = (key, value)
+        self.curr_size += 1
+        self.load_average = (self.curr_size/self.capacity)
+        return
+
+    def delete_hash(self, key):
+        # Delete the data of a city from the hash table, marking it as 'deleted'
+        index = self.hash_function(key)
+        original_index = index
+        while self.hash_table[index] is not None:
+            if self.hash_table[index][0] == key:
+                self.hash_table[index] = self.deleted_marker
+                return
+            index = (index + 1) % self.capacity
+            if index == original_index:
+                raise Exception(f"{key} not found")
+        if self.hash_table[index] == self.deleted_marker:
+            print(f"City {key} not found or already deleted.")
+        return
+
+    def search_hash(self, key):
+        # Generate hash index using city + month
+        # For example "Fremont" + "January"
+        index = self.hash_function(key)
+        original_index = index
+        while self.hash_table[index] is not None:
+            if self.hash_table[index][0] == key:
+                return self.hash_table[index]
+            index = (index + 1) % self.capacity
+            if index == original_index:
+                raise Exception(f"{key} not found")
+        value = self.hash_table[index]
+        if self.hash_table[index] is self.deleted_marker:
+            print(f"City {key} has been deleted.")
             return None
-        return data
+        return value
 
     def classify_recyclable(self, plastic_type):
-        """Classify the plastic type as recyclable."""
+        # Classify the plastic type as recyclable.
         if plastic_type in self.type:
             return plastic_type in GenPlasticWasteData.recyclable
         return False
 
     def classify_nonrecyclable(self, plastic_type):
-        """Classify the plastic type as non-recyclable."""
+        # Classify the plastic type as non-recyclable.
         if plastic_type in self.type:
             return plastic_type in GenPlasticWasteData.non_recyclable
         return False
 
     def classify_sometimesrecyclable(self, plastic_type):
-        """Classify the plastic type as sometimes recyclable."""
+        # Classify the plastic type as sometimes recyclable.
         if plastic_type in self.type:
             return plastic_type in GenPlasticWasteData.sometimes_recyclable
         return False
 
-    def read_city_recycle_data(self, city):
-        """Reads the recycling data for a given city."""
-        city_data = self.search(city)
-        if city_data:
-            print(f"City: {city_data.city}")
-            print(f"Recyclable Quantity: {city_data.get_city_recyclable_data()}")
-            print(f"Non-Recyclable Quantity: {city_data.get_city_non_recyclable_data()}")
-            print(f"Sometimes Recyclable Quantity: {city_data.get_city_sometimes_recyclable_data()}")
-            print(f"Date Received: {city_data.get_date_received()}")
-            print(f"Date Processed: {city_data.get_date_processed()}")
-        else:
-            print(f"No data found for {city}.")
+    def convert_month_to_index(self, month_list):
+        # List of months in order
+        months = ["January", "February", "March", "April", "May", "June",
+                  "July", "August", "September", "October", "November", "December"]
+
+        # Create a mapping of month name to index
+        month_to_index = {month: index for index, month in enumerate(months)}
+
+        # Convert the input list to indices
+        return [month_to_index[month] for month in month_list]
 
     def compare_efficiency(self, city_data, selected_months):
-        """
-        Compares the recycling efficiency of different cities.
-        Efficiency is calculated as the ratio of recyclable quantity to total quantity (recyclable + non-recyclable + sometimes recyclable).
-        """
+        # Compares the recycling efficiency of different cities.
+        # Efficiency is calculated as the ratio of recyclable quantity to total quantity
+        # (recyclable + non-recyclable + sometimes recyclable) * population.
         efficiency_data = {}
+        mlist = self.convert_month_to_index(selected_months)
 
-        for city in city_data:
-            total_waste = city.recyclable_quantity + city.nonrecyclable_quantity + city.sometimesrecyclable_quantity
-            if total_waste == 0:
-                efficiency = 0
-            else:
-                efficiency = city.recyclable_quantity / total_waste  # Recycling efficiency ratio
-
-            efficiency_data[city.city] = efficiency
+        for month in mlist:
+            for city in city_data:
+                data = city.get_monthly_data(month)
+                print("month ", month, "City ", city.city, "Data ", data)
+                total_waste = (data[0] + data[1] + data[2]) * city.population
+                recyclable_waste = data[0]
+                if total_waste == 0:
+                    efficiency = 0
+                    efficiency_data[city.city] = efficiency
+                else:
+                    efficiency = (recyclable_waste / total_waste)  # Recycling efficiency ratio
+                    efficiency_data[city.city] = efficiency
 
         # Sort cities based on efficiency in descending order
         sorted_efficiency = sorted(efficiency_data.items(), key=lambda item: item[1], reverse=True)
 
         # Plot bar chart for recycling efficiency
+        print("Efficiency Data ", efficiency_data)
         self.plot_efficiency_bar_chart(efficiency_data)
 
         # Plot pie chart for recycling efficiency distribution
@@ -422,9 +495,7 @@ class PlasticWasteRecyclingDB:
 
     # Function to create the UI
     def plot_efficiency_bar_chart(self, efficiency_data):
-        """
-        Displays a bar chart of recycling efficiency by city.
-        """
+        # Displays a bar chart of recycling efficiency by city.
         cities = list(efficiency_data.keys())
         efficiencies = list(efficiency_data.values())
 
@@ -437,9 +508,7 @@ class PlasticWasteRecyclingDB:
         plt.show()
 
     def plot_efficiency_pie_chart(self, efficiency_data):
-        """
-        Displays a pie chart for recycling efficiency distribution.
-        """
+        # Displays a pie chart for recycling efficiency distribution.
         # Pie chart for recycling efficiency
         labels = list(efficiency_data.keys())
         sizes = list(efficiency_data.values())
@@ -470,39 +539,41 @@ class PlasticWasteBST:
     def __init__(self):
         self.root = None
 
-    def insert(self, plastic_type, city_name, recyclable_quantity, non_recyclable_quantity, sometimes_recyclable_quantity, date_received, date_processed):
-        """Insert a new record into the BST."""
-        new_node = BSTNode(plastic_type, city_name, recyclable_quantity, non_recyclable_quantity, sometimes_recyclable_quantity, date_received, date_processed)
+    def insert_bst(self, plastic_type, city_name, recyclable_quantity, non_recyclable_quantity,
+                   sometimes_recyclable_quantity, date_received, date_processed):
+        # Insert a new record into the BST.
+        new_node = BSTNode(plastic_type, city_name, recyclable_quantity, non_recyclable_quantity,
+                           sometimes_recyclable_quantity, date_received, date_processed)
         if self.root is None:
             self.root = new_node
         else:
-            self._insert(self.root, new_node)
+            self.insert_bst_recursive(self.root, new_node)
 
-    def _insert(self, node, new_node):
-        """Helper method for recursive insertion."""
+    def insert_bst_recursive(self, node, new_node):
+        # Helper method for recursive insertion.
         if new_node.plastic_type < node.plastic_type:
             if node.left is None:
                 node.left = new_node
             else:
-                self._insert(node.left, new_node)
+                self.insert_bst_recursive(node.left, new_node)
         else:
             if node.right is None:
                 node.right = new_node
             else:
-                self._insert(node.right, new_node)
+                self.insert_bst_recursive(node.right, new_node)
 
-    def search(self, plastic_type):
-        """Search for a node by plastic type."""
+    def search_bst(self, plastic_type):
+        # Search for a node by plastic type.
         return self._search(self.root, plastic_type)
 
-    def _search(self, node, plastic_type):
-        """Helper method for recursive search."""
+    def search_bst_recursive(self, node, plastic_type):
+        # Helper method for recursive search.
         if node is None or node.plastic_type == plastic_type:
             return node
         elif plastic_type < node.plastic_type:
-            return self._search(node.left, plastic_type)
+            return self.search_bst_recursive(node.left, plastic_type)
         else:
-            return self._search(node.right, plastic_type)
+            return self.search_bst_recursive(node.right, plastic_type)
 
 
 # Visualizing Plastic Waste Data
@@ -511,11 +582,11 @@ class VisualizePlasticWaste:
         self.bst = PlasticWasteBST()
 
     def add_data(self, plastic_type, city_name, recyclable_quantity, non_recyclable_quantity, sometimes_recyclable_quantity, date_received, date_processed):
-        """Add data to the BST."""
-        self.bst.insert(plastic_type, city_name, recyclable_quantity, non_recyclable_quantity, sometimes_recyclable_quantity, date_received, date_processed)
+        # Add data to the BST.
+        self.bst.insert_bst(plastic_type, city_name, recyclable_quantity, non_recyclable_quantity, sometimes_recyclable_quantity, date_received, date_processed)
 
     def display_bar_graph(self):
-        """Display bar graph of recyclable, non-recyclable, and sometimes recyclable quantities."""
+        # Display bar graph of recyclable, non-recyclable, and sometimes recyclable quantities.
         cities = []
         recyclable_quantities = []
         non_recyclable_quantities = []
@@ -554,7 +625,7 @@ class VisualizePlasticWaste:
         plt.show()
 
     def display_stacked_bar_graph(self):
-        """Display a stacked bar graph for recyclable, non-recyclable, and sometimes recyclable plastics."""
+        # Display a stacked bar graph for recyclable, non-recyclable, and sometimes recyclable plastics.
         cities = []
         recyclable_quantities = []
         non_recyclable_quantities = []
@@ -589,7 +660,7 @@ class VisualizePlasticWaste:
         plt.show()
 
     def display_pie_chart(self):
-        """Display a pie chart for the types of plastics."""
+        # Display a pie chart for the types of plastics.
         recyclable = 0
         non_recyclable = 0
         sometimes_recyclable = 0
@@ -618,7 +689,7 @@ class VisualizePlasticWaste:
         plt.show()
 
     def display_line_graph(self):
-        """Display a line graph showing plastic waste quantities over time for each city."""
+        # Display a line graph showing plastic waste quantities over time for each city.
         dates = []
         city_data = {}
 
@@ -659,7 +730,7 @@ class VisualizePlasticWaste:
         plt.show()
 
     def display_heat_map(self):
-        """Display a heat map of recyclable and non-recyclable plastics for cities."""
+        # Display a heat map of recyclable and non-recyclable plastics for cities.
         cities = []
         recyclable_quantities = []
         non_recyclable_quantities = []
@@ -704,6 +775,7 @@ def create_ui():
     # Initialize variables for user selections
     selected_cities = []
     selected_months = []
+    selected_rate = 0
 
     # Add a frame to group the checkboxes
     city_frame = tk.Frame(root)
@@ -728,9 +800,13 @@ def create_ui():
             if var.get() == 1:
                 selected_months.append(months[i])
 
+
     # Function to generate and compare efficiency when the button is clicked
     def compare_efficiency():
         print("In compare_efficiency function")
+        # Initialize the database and insert the data
+        percentage = 0.0
+        db = PlasticWasteRecyclingDB(101)
         if len(selected_cities) < 2:
             messagebox.showerror("Error", "Please select at least two cities for comparison.")
             return
@@ -761,10 +837,9 @@ def create_ui():
             data.nonrecyclable_quantity = total_non_recyclable
             data.sometimesrecyclable_quantity = total_sometimes_recyclable
             city_data.append(data)
-        # Initialize the database and insert the data
-        db = PlasticWasteRecyclingDB(10)
-        for city_data_item in city_data:
-            db.insert(city_data_item.city, city_data_item)
+        #
+        # for city_data_item in city_data:
+        #     db.insert_hash(city_data_item.city, city_data_item.monthly_data)
 
         # Compare efficiency
         db.compare_efficiency(city_data, selected_months)
@@ -804,106 +879,88 @@ def main():
     months = ["January", "February", "March", "April", "May", "June", "July", "August", "September",
               "October", "November", "December"]
     cities = ["Fremont", "Hayward", "Oakland", "Pleasanton", "Dublin"]
+    hkey =""
+    # Create the PlasticWasteRecyclingDB and insert data for the cities
+    db = PlasticWasteRecyclingDB(capacity=101)
+
+    # Create VisualizePlasticWaste object
+    visualizer = VisualizePlasticWaste()
 
     for month in months:
         for city in cities:
             file_path = city + month + ".csv"
+            hkey = city+month
             # Generating 10,000 records for each city
             if city == "Fremont":
                 if not os.path.exists(file_path):
                     fremont_data.generate_data(file_path)
+                    fremont_data.month = month
+                    db.insert_hash(hkey, fremont_data)
                 else:
                     fremont_data.read_csv(file_path)
+                    fremont_data.month = month
+                    db.insert_hash(hkey, fremont_data)
             if city == "Hayward":
                 if not os.path.exists(file_path):
                     hayward_data.generate_data(file_path)
+                    hayward_data.month = month
+                    db.insert_hash(hkey, hayward_data)
                 else:
                     hayward_data.read_csv(file_path)
+                    hayward_data.month = month
+                    db.insert_hash(hkey, hayward_data)
+
             if city == "Oakland":
                 if not os.path.exists(file_path):
                     oakland_data.generate_data(file_path)
+                    oakland_data.month = month
+                    db.insert_hash(hkey, oakland_data)
                 else:
                     oakland_data.read_csv(file_path)
+                    oakland_data.month = month
+                    db.insert_hash(hkey, oakland_data)
             if city == "Pleasanton":
                 if not os.path.exists(file_path):
                     pleasanton_data.generate_data(file_path)
+                    pleasanton_data.month = month
+                    db.insert_hash(hkey, pleasanton_data)
                 else:
                     pleasanton_data.read_csv(file_path)
+                    pleasanton_data.month = month
+                    db.insert_hash(hkey, pleasanton_data)
             if city == "Dublin":
                 if not os.path.exists(file_path):
                     dublin_data.generate_data(file_path)
+                    dublin_data.month = month
+                    db.insert_hash(hkey, dublin_data)
                 else:
                     dublin_data.read_csv(file_path)
+                    dublin_data.month = month
+                    db.insert_hash(hkey, dublin_data)
 
 
-    # Create the PlasticWasteRecyclingDB and insert data for Fremont
-    db = PlasticWasteRecyclingDB(capacity=10)
-    db.insert("Fremont", fremont_data)
-
-    # Read the data back for 5 cities
-    db.read_city_recycle_data("Fremont")
-    db.read_city_recycle_data("Hayward")
-    db.read_city_recycle_data("Oakland")
-    db.read_city_recycle_data("Pleasanton")
-    db.read_city_recycle_data("Dublin")
-
-    # db.compare_efficiency([fremont_data, hayward_data, oakland_data, pleasanton_data, dublin_data])
-
-    # Delete the Fremont entry
-    db.delete("Fremont")
-
-    # Try searching after deletion
-    db.read_city_recycle_data("Fremont")
-
-    # Classify plastic types
-    print(db.classify_recyclable("PET"))  # Should return True
-    print(db.classify_nonrecyclable("PVC"))  # Should return True
-    print(db.classify_sometimesrecyclable("LDPE"))  # Should return True
-
-    # Example usage
-    visualizer = VisualizePlasticWaste()
-
-    # Add some sample data
-    visualizer.add_data("PET", "Fremont", fremont_data.recyclable_quantity,
-                        fremont_data.nonrecyclable_quantity, fremont_data.sometimesrecyclable_quantity,
-                        datetime(2025, 4, 1), datetime(2025, 4, 3))
-    visualizer.add_data("PET", "Hayward", hayward_data.recyclable_quantity,
-                        hayward_data.nonrecyclable_quantity, hayward_data.sometimesrecyclable_quantity,
-                        datetime(2025, 4, 1), datetime(2025, 4, 3))
-    visualizer.add_data("PET", "Oakland", oakland_data.recyclable_quantity,
-                        oakland_data.nonrecyclable_quantity, oakland_data.sometimesrecyclable_quantity,
-                        datetime(2025, 4, 1), datetime(2025, 4, 3))
-    visualizer.add_data("PET", "Pleasanton", pleasanton_data.recyclable_quantity,
-                        pleasanton_data.nonrecyclable_quantity, pleasanton_data.sometimesrecyclable_quantity,
-                        datetime(2025, 4, 1), datetime(2025, 4, 3))
-    visualizer.add_data("PET", "Dublin", dublin_data.recyclable_quantity,
-                        dublin_data.nonrecyclable_quantity, dublin_data.sometimesrecyclable_quantity,
-                        datetime(2025, 4, 1), datetime(2025, 4, 3))
-    # visualizer.add_data("HDPE", "Fremont", fremont_data.recyclable_quantity,
-    #                     fremont_data.nonrecyclable_quantity, fremont_data.sometimesrecyclable_quantity,
-    #                     datetime(2025, 4, 2), datetime(2025, 4, 4))
-    # visualizer.add_data("PVC", "Fremont", fremont_data.recyclable_quantity,
-    #                     fremont_data.nonrecyclable_quantity, fremont_data.sometimesrecyclable_quantity,
-    #                     datetime(2025, 4, 3), datetime(2025, 4, 5))
-    # visualizer.add_data("LDPE", "Fremont", fremont_data.recyclable_quantity,
-    #                     fremont_data.nonrecyclable_quantity, fremont_data.sometimesrecyclable_quantity,
-    #                     datetime(2025, 4, 3), datetime(2025, 4, 5))
-    # visualizer.add_data("PP", "Fremont", fremont_data.recyclable_quantity,
-    #                     fremont_data.nonrecyclable_quantity, fremont_data.sometimesrecyclable_quantity,
-    #                     datetime(2025, 4, 3), datetime(2025, 4, 5))
-    # visualizer.add_data("PS", "Fremont", fremont_data.recyclable_quantity,
-    #                     fremont_data.nonrecyclable_quantity, fremont_data.sometimesrecyclable_quantity,
-    #                     datetime(2025, 4, 3), datetime(2025, 4, 5))
-    # visualizer.add_data("Other", "Fremont", fremont_data.recyclable_quantity,
-    #                     fremont_data.nonrecyclable_quantity, fremont_data.sometimesrecyclable_quantity,
-    #                     datetime(2025, 4, 3), datetime(2025, 4, 5))
-
+    city_data = [fremont_data, hayward_data, oakland_data, pleasanton_data, dublin_data]
+    for month in ["January"]:
+        for data in city_data:
+            visualizer.add_data(data.recyclable[0], data.city,
+                                data.recyclable_quantity / data.population,
+                                data.nonrecyclable_quantity / data.population,
+                                data.sometimesrecyclable_quantity / data.population,
+                                datetime(2025, 4, 1), datetime(2025, 4, 3))
     # Display various visualizations
     visualizer.display_bar_graph()
     visualizer.display_stacked_bar_graph()
     visualizer.display_pie_chart()
-    visualizer.display_line_graph()
+    # visualizer.display_line_graph()
     visualizer.display_heat_map()
+
+    for month in ["February", "March"]:
+        for data in city_data:
+            visualizer.add_data(data.recyclable[0], data.city,
+                                data.recyclable_quantity / data.population,
+                                data.nonrecyclable_quantity / data.population,
+                                data.sometimesrecyclable_quantity / data.population,
+                                datetime(2025, 4, 1), datetime(2025, 4, 3))
 
     create_ui()
 
